@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const homeRoute = require("./routes/homeRoute")
+const productRoute = require("./routes/productRoute")
 const config = require("./config/")
 
 mongoose.set('strictQuery', false)
@@ -21,4 +22,5 @@ mongoose.connect(config.dbConStr, (err, result) => {
 })
 
 app.use('/', homeRoute)
+app.use("/api", productRoute)
 app.use(bodyParser.json)
