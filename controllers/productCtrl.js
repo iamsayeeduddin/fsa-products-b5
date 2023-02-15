@@ -31,4 +31,11 @@ const create = (req, res) => {
   res.send();
 };
 
-module.exports = { get, create };
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const product = await ProductModel.findOne({ _id: id });
+  res.status(200);
+  res.json(product);
+};
+
+module.exports = { get, create, getById };
