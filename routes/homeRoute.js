@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const homeCtrl = require('./../controllers/homeCtrl')
+const express = require("express");
+const router = express.Router();
+const homeCtrl = require("./../controllers/homeCtrl");
 
-router.get('/', homeCtrl.get)
-router.get('/health', homeCtrl.health)
+router.get("/", homeCtrl.get);
+router.get("/health", homeCtrl.health);
 
-module.exports = router
+module.exports = router;

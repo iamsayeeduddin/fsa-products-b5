@@ -32,10 +32,45 @@ const create = (req, res) => {
 };
 
 const getById = async (req, res) => {
-  const { id } = req.params;
-  const product = await ProductModel.findOne({ _id: id });
-  res.status(200);
-  res.json(product);
+  try {
+    const { id } = req.params;
+    const product = await ProductModel.findOne({ _id: id });
+    res.status(200);
+    res.json(product);
+  } catch (err) {
+    res.status(500);
+    res.send("Internal Server Error");
+  }
 };
 
-module.exports = { get, create, getById };
+const remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await ProductModel.findOneAndDelete({ _id: id });
+    res.status(200);
+    res.send();
+  } catch (err) {
+    res.status(500);
+    res.send();
+  }
+};
+
+const update = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  await ProductModel.findOneAndUpdate(
+    { _id: id },
+    {
+      brand: body.brand,
+      model: body.model,
+      price: body.price,
+      inStock: body.inStock,
+      category: body.category,
+    }
+  );
+  res.status(201);
+  res.send();
+};
+
+module.exports = { get, create, getById, remove, update };
