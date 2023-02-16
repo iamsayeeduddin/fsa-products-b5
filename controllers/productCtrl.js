@@ -1,4 +1,5 @@
 const ProductModel = require("../models/productModel");
+const productRepo = require("../repositories/productRepo");
 
 // const get = (req, res) => {
 //     productModel.find().then((result) => {
@@ -15,7 +16,7 @@ const ProductModel = require("../models/productModel");
 
 const get = async (req, res) => {
   try {
-    const product = await ProductModel.find();
+    const product = await productRepo.get();
     res.status(200);
     res.json(product);
   } catch (err) {
@@ -24,8 +25,8 @@ const get = async (req, res) => {
   }
 };
 
-const create = (req, res) => {
-  const product = new ProductModel(req.body);
+const create = async (req, res) => {
+  const product = await productRepo.create(req.body);
   product.save();
   res.status(201);
   res.send();
@@ -34,7 +35,7 @@ const create = (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await ProductModel.findOne({ _id: id });
+    const product = await productRepo.getById(id);
     res.status(200);
     res.json(product);
   } catch (err) {
@@ -46,7 +47,7 @@ const getById = async (req, res) => {
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
-    await ProductModel.findOneAndDelete({ _id: id });
+    await productRepo.remove(id);
     res.status(200);
     res.send();
   } catch (err) {
@@ -55,22 +56,23 @@ const remove = async (req, res) => {
   }
 };
 
+// Full Update
 const update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  await ProductModel.findOneAndUpdate(
-    { _id: id },
-    {
-      brand: body.brand,
-      model: body.model,
-      price: body.price,
-      inStock: body.inStock,
-      category: body.category,
-    }
-  );
-  res.status(201);
+  await productRepo.update(id, body);
+  res.status(204);
   res.send();
 };
 
-module.exports = { get, create, getById, remove, update };
+const patch = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  await productRepo.patch(id, body);
+  res.status(204);
+  res.send();
+};
+
+module.exports = { get, create, getById, remove, update, patch };
