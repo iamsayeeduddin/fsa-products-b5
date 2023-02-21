@@ -1,4 +1,3 @@
-const ProductModel = require("../models/productModel");
 const productRepo = require("../repositories/productRepo");
 
 // const get = (req, res) => {
@@ -16,7 +15,9 @@ const productRepo = require("../repositories/productRepo");
 
 const get = async (req, res) => {
   try {
-    const product = await productRepo.get();
+    const page = +req.params.page;
+    const pageSize = +req.params.pageSize;
+    const product = await productRepo.get(page, pageSize);
     res.status(200);
     res.json(product);
   } catch (err) {
@@ -26,10 +27,20 @@ const get = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const product = await productRepo.create(req.body);
-  product.save();
-  res.status(201);
-  res.send();
+  try {
+    const product = await productRepo.create(req.body);
+    product.save();
+    res.status(201);
+    res.send();
+  } catch (err) {
+    if (err && err.message.indexOf("validation failed") > -1) {
+      res.status(400);
+      res.send("Bad Request");
+    } else {
+      res.status(500);
+      res.send(err);
+    }
+  }
 };
 
 const getById = async (req, res) => {
