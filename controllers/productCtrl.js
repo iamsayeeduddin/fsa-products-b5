@@ -17,12 +17,24 @@ const get = async (req, res) => {
   try {
     const page = +req.params.page;
     const pageSize = +req.params.pageSize;
-    const product = await productRepo.get(page, pageSize);
+    const data = await productRepo.get(page, pageSize);
+    const totalRecords = await productRepo.getCount();
+    const totalPages = Math.ceil(totalRecords / pageSize);
+
+    const response = {
+      data,
+      metadata: {
+        totalRecords,
+        totalPages,
+      },
+    };
+
     res.status(200);
-    res.json(product);
+    res.json(response);
   } catch (err) {
     res.status(500);
     res.send("Internal server error!");
+    ``;
   }
 };
 

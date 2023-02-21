@@ -6,6 +6,10 @@ const get = (page, pageSize) => {
     .limit(pageSize);
 };
 
+const getCount = () => {
+  return ProductModel.countDocuments();
+};
+
 const create = (data) => {
   const product = new ProductModel(data);
   return product.save();
@@ -43,4 +47,5 @@ module.exports = {
   remove,
   update,
   patch,
+  getCount,
 };
