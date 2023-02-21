@@ -1,7 +1,9 @@
 const ProductModel = require("../models/productModel");
 
-const get = () => {
-  return ProductModel.find({}, { __v: 0 });
+const get = (page, pageSize) => {
+  return ProductModel.find({}, { __v: 0 })
+    .skip((page - 1) * pageSize)
+    .limit(pageSize);
 };
 
 const create = (data) => {
