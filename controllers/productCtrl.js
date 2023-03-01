@@ -1,5 +1,6 @@
 const productRepo = require("../repositories/productRepo");
-
+const logger = require("../utils/appLogger");
+const reviewRepo = require("../repositories/reviewRepo");
 // const get = (req, res) => {
 //     productModel.find().then((result) => {
 //         res.status(200)
@@ -13,28 +14,46 @@ const productRepo = require("../repositories/productRepo");
 
 // GET Request / READ
 
+const getOptions = (req) => {
+  const page = +req.params.page || 1;
+  const pageSize = +req.params.pageSize || 5;
+  let sort = req.query.sort || "createdAt";
+  let dir = req.query.dir || "desc";
+  let search = req.query.search || "";
+
+  return {
+    page,
+    pageSize,
+    sort,
+    dir,
+    search,
+  };
+};
+
+// /api/products/page/1/size/5?sort=price&dir=asc
 const get = async (req, res) => {
   try {
-    const page = +req.params.page;
-    const pageSize = +req.params.pageSize;
-    const data = await productRepo.get(page, pageSize);
-    const totalRecords = await productRepo.getCount();
-    const totalPages = Math.ceil(totalRecords / pageSize);
+    let options = getOptions(req);
+
+    const data = await productRepo.get(options);
+    const totalRecords = await productRepo.getCount(options);
+    const totalPages = Math.ceil(totalRecords / options.pageSize);
 
     const response = {
-      data,
       metadata: {
         totalRecords,
         totalPages,
       },
+      data,
     };
-
+    // logger.info("Get Request", response);
     res.status(200);
     res.json(response);
   } catch (err) {
+    console.log(err);
+    logger.error(err);
     res.status(500);
     res.send("Internal server error!");
-    ``;
   }
 };
 
@@ -59,9 +78,15 @@ const getById = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await productRepo.getById(id);
+    const reviews = await reviewRepo.getByProductId(id);
+
+    const productJSON = product.toJSON();
+    productJSON.reviews = reviews;
+
     res.status(200);
-    res.json(product);
+    res.json(productJSON);
   } catch (err) {
+    console.log(err);
     res.status(500);
     res.send("Internal Server Error");
   }
