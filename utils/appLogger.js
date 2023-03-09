@@ -8,7 +8,7 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
   if (!fs.existsSync(path.join(dir, "app.log"))) {
     fs.createWriteStream(path.join(dir, "app.log"));
-    writeStream.end();
+    WriteStream.end();
   }
 }
 const filePath = path.join(__dirname, "..", "logs", "app.log");
