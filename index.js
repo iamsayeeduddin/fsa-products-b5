@@ -9,6 +9,7 @@ const homeRoute = require("./routes/homeRoute");
 const productRoute = require("./routes/productRoute");
 const config = require("./config/");
 const reviewRoute = require("./routes/reviewRoute");
+const auth = require("./utils/auth");
 // const logger = require("./utils/appLogger");
 
 mongoose.set("strictQuery", false);
@@ -40,10 +41,20 @@ mongoose.connect(config.dbConStr, (err, result) => {
   }
 });
 
+// Public API
 app.use("/", homeRoute);
+
+app.use(auth.authenticate);
+
+// Private API
 app.use("/api/products/", productRoute);
 app.use("/api/reviews/", reviewRoute);
 
-// Logging
-// Request, Application
-// Levels: info, warning, Err, debug
+// Authentication & Authorization
+// Basic
+// Token
+// Third Party - Google, FB, github, Microsoft etc...
+// Middlewares
+// HTTP - Pipeline
+// HTTP Request - BodyParser - Morgan -
+// Base admin:password
