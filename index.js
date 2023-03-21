@@ -9,6 +9,7 @@ const homeRoute = require("./routes/homeRoute");
 const productRoute = require("./routes/productRoute");
 const config = require("./config/");
 const reviewRoute = require("./routes/reviewRoute");
+const userRoute = require("./routes/userRoute");
 const auth = require("./utils/auth");
 // const logger = require("./utils/appLogger");
 
@@ -44,11 +45,12 @@ mongoose.connect(config.dbConStr, (err, result) => {
 // Public API
 app.use("/", homeRoute);
 
-app.use(auth.authenticate);
+// app.use(auth.tokenAuth);
 
 // Private API
 app.use("/api/products/", productRoute);
 app.use("/api/reviews/", reviewRoute);
+app.use("/api/users/", userRoute);
 
 // Authentication & Authorization
 // Basic
@@ -58,3 +60,6 @@ app.use("/api/reviews/", reviewRoute);
 // HTTP - Pipeline
 // HTTP Request - BodyParser - Morgan -
 // Base admin:password
+
+// Token
+// Tokeninzation
