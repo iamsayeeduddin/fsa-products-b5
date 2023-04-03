@@ -24,7 +24,7 @@ function authenticate(req, res, next) {
 }
 
 function generateTokens(payload) {
-  return jwt.sign(payload, config.jwtSecret, { expiresIn: "10m" });
+  return jwt.sign(payload, process.env.jwtSecret, { expiresIn: "10m" });
 }
 
 function tokenAuth(req, res, next) {
@@ -36,7 +36,7 @@ function tokenAuth(req, res, next) {
     } else {
       const tokens = authHeader.split(" ");
       const jwtToken = tokens[1];
-      const response = jwt.verify(jwtToken, config.jwtSecret);
+      const response = jwt.verify(jwtToken, process.env.jwtSecret);
       if (response) {
         req.role = response.role;
         next();
