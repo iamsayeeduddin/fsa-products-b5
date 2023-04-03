@@ -34,7 +34,7 @@ app.use(morgan("dev", { stream: stream }));
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}!`));
 
-mongoose.connect(config.dbConStr, (err, result) => {
+mongoose.connect(process.env.dbConStr, (err, result) => {
   if (!err) {
     console.log("DB Connected!");
   } else {
