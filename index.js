@@ -45,7 +45,7 @@ mongoose.connect(config.dbConStr, (err, result) => {
 // Public API
 app.use("/", homeRoute);
 
-// app.use(auth.tokenAuth);
+// app.use(auth.tokenAuth); 
 
 // Private API
 app.use("/api/products/", productRoute);
